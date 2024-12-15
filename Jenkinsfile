@@ -29,7 +29,7 @@ stage('Set Namespace') {
                 checkout scm
             }
         }
-
+    }
         stage('Build Docker Image') {
             steps {
                 script {
