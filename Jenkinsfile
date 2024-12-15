@@ -78,3 +78,4 @@ stage('Set Namespace') {
         }
     }
 }
+}
