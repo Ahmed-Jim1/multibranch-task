@@ -10,26 +10,24 @@ pipeline {
         NAMESPACE = ""
     }
 
-stage('Set Namespace') {
-          
-         steps {
+    stages {
+        stage('Set Namespace') {
+            steps {
                 script {
                     // Get the appropriate namespace based on the branch name
                     NAMESPACE = setNamespace(env.BRANCH_NAME)
                     echo "Deploying to namespace: ${NAMESPACE}"
                 }
             }
-
-}
-    
-    stages {
+        }
+        
         stage('Checkout Code') {
             steps {
                 echo "Checking out code from SCM..."
                 checkout scm
             }
         }
-    }
+
         stage('Build Docker Image') {
             steps {
                 script {
@@ -54,7 +52,7 @@ stage('Set Namespace') {
             }
         }
 
- stage('Deploy to Kubernetes') {
+        stage('Deploy to Kubernetes') {
             steps {
                 script {
                     // Deploy to Kubernetes using the shared library
@@ -62,6 +60,7 @@ stage('Set Namespace') {
                 }
             }
         }
+    }
 
     post {
         always {
@@ -78,4 +77,3 @@ stage('Set Namespace') {
         }
     }
 }
-
