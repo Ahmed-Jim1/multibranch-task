@@ -19,7 +19,7 @@ stage('Set Namespace') {
                     echo "Deploying to namespace: ${NAMESPACE}"
                 }
             }
-
+}
 
     
     stages {
