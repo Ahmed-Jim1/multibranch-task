@@ -1,17 +1,27 @@
 @Library("shared-library@main") _  // Import the shared library
 
 pipeline {
-    agent any
+    agent { label 'slave01' }
 
     environment {
         DOCKER_IMAGE_NAME = 'ivolve'
         DOCKER_HUB_REPO = 'ahmedmahmood44'
         DOCKER_HUB_CREDENTIALS = credentials('Docker')
-        OPENSHIFT_PROJECT = 'ahmedmahmoud'
-        OPENSHIFT_SERVER = 'https://api.ocp-training.ivolve-test.com:6443'
-        OPENSHIFT_TOKEN = 'sha256~52gqjo6YtbYK20vBfi7eN_G35XjByjrhyF3fb5V9yec'
+        NAMESPACE = ""
     }
 
+stage('Set Namespace') {
+          
+         steps {
+                script {
+                    // Get the appropriate namespace based on the branch name
+                    NAMESPACE = setNamespace(env.BRANCH_NAME)
+                    echo "Deploying to namespace: ${NAMESPACE}"
+                }
+            }
+
+
+    
     stages {
         stage('Checkout Code') {
             steps {
@@ -44,15 +54,14 @@ pipeline {
             }
         }
 
-        stage('Deploy to OpenShift') {
+ stage('Deploy to Kubernetes') {
             steps {
                 script {
-                    openshiftTasks.loginOpenShift(OPENSHIFT_SERVER, OPENSHIFT_TOKEN)
-                    openshiftTasks.deployToOpenShift('./Jenkins/Task-3')
+                    // Deploy to Kubernetes using the shared library
+                    deployToKubernetes(NAMESPACE)
                 }
             }
         }
-    }
 
     post {
         always {
