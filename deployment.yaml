@@ -1,0 +1,19 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ivolve
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: ivolve
+  template:
+    metadata:
+      labels:
+        app: ivolve
+    spec:
+      containers:
+      - name: ivolve-app
+        image: docker.io/ahmedmahmood44/ivolve:latest
+        ports:
+        - containerPort: 5000
